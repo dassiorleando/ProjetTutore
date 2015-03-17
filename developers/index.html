@@ -516,7 +516,7 @@ function send_task()
     if (isset($_GET['task']) AND $_GET['task'] === 'send')
     {
         $m = "Sample Task Message";
-        $f = "+819029842384";
+        $f = "+000-000-0000;
         $s = "true";
         $reply[0] = [
             "to" => $f,
@@ -546,7 +546,7 @@ function send_instant_message($to)
 {
 
     $m = "Your message has been received";
-    $f = "09029842384";
+    $f = "+000-000-0000";
     $s = true;
 
     $reply[0] = [
@@ -665,7 +665,7 @@ else
 </p>
 <pre class="prettyprint linenums">
     $ curl -D - -X POST http://localhost/demo.php \
-        -F "from=09048370465" \
+        -F "from=+000-000-0000" \
         -F "message=sample text message" \
         -F "secret=123456" \
         -F "device_id=1" \
