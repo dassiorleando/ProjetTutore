@@ -118,10 +118,17 @@ public class MessageSyncHttpClient extends MainHttpClient {
                 return false;
             }
             final Gson gson = new Gson();
+
+            log("DASSI --------------> response : " + response.toString() + " and status code : " + statusCode);
+
             SmssyncResponse smssyncResponses = gson.fromJson(response, SmssyncResponse.class);
+
+            log("DASSI --------------> smssyncResponses json : " + smssyncResponses.toString() + " and smssyncResponses " + smssyncResponses);
+
             if (smssyncResponses.getPayload().isSuccess()) {
                 // auto response message is enabled to be received from the
                 // server.
+                log("DASSI ----> SUCCESS SERVER Responses with payload : " + smssyncResponses.getPayload().toString());
                 setServerSuccessResp(smssyncResponses);
                 return true;
             }
@@ -162,6 +169,11 @@ public class MessageSyncHttpClient extends MainHttpClient {
                 log("setHttpEntity format YAML");
                 Util.logActivities(context, context.getString(R.string.http_entity_format, "YAML"));
                 break;
+            /* case URLEncoded:
+                setStringEntity(DataFormatUtil.makeJSONString(getParams()));
+                log("setHttpEntity format JSON");
+                Util.logActivities(context, "setHttpEntity format JSON");
+                break; */
             case URLEncoded:
                 log("setHttpEntity format URLEncoded");
                 Util.logActivities(context,

@@ -394,4 +394,10 @@
     <string name="in_valid_email_address">Invalid email address</string>
     <string name="email_label">Enter your email address to learn more.</string>
     <string name="rate_dialog_message">Are you interested in receiving technical support or customization for your SMSsync integration?</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="enter_name">Enter the name</string>
+    <string name="enter_pass_word">Enter the password</string>
+    <string name="login_parse">Log In</string>
 </resources>

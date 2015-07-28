@@ -39,7 +39,7 @@ public class DataFormatUtil {
         for (NameValuePair pair : pairs) {
             obj.put(pair.getName(), pair.getValue());
         }
-
+        obj.toString();
         return obj.toString();
     }
 
