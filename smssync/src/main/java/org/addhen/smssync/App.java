@@ -21,6 +21,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.parse.Parse;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
@@ -28,6 +29,7 @@ import com.squareup.otto.ThreadEnforcer;
 import org.addhen.smssync.activities.LoginActivity;
 import org.addhen.smssync.activities.MainActivity;
 import org.addhen.smssync.database.Database;
+import org.addhen.smssync.domains.SmsReceiverP;
 
 /**
  * This class is for maintaining global application state.
@@ -45,8 +47,6 @@ public class App extends Application {
     public static Application app = null;
 
     private ParseUser currentUser;
-    Intent goLogIn = new Intent(this.getApplicationContext(), LoginActivity.class);
-    Intent goMain = new Intent(this.getApplicationContext(), MainActivity.class);
 
     /**
      * Return the application tracker
@@ -67,22 +67,29 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Intent goLogIn = new Intent(this.getApplicationContext(), LoginActivity.class);
+        Intent goMain = new Intent(this.getApplicationContext(), MainActivity.class);
+
+
+
         // Open database connection when the application starts.
         app = this;
         mDb = new Database(this);
 
         Parse.enableLocalDatastore(this);
         // Initializing our classes extend ParseObject
-        // ParseObject.registerSubclass(User.class);
+        ParseObject.registerSubclass(SmsReceiverP.class);
         //Initialize ParseObject to map The project module Core in the cloud
-        Parse.initialize(this, "As0XlfPsowkSfOjcPKXP4KyGlvSEI65eJIMGWFBe", "evYQ4p7RPU9SsYsfNvFr6lqXT3KZBcunUhWqsF9t");
+        Parse.initialize(this, "vRHcsAgP03zND5ySHgieTQW9iAPiWNReYYDd4u8j", "1Ba5VRfcNM3kNlRZLLnZczd4iqnpppRYQROsLLWj");
 
 
+        currentUser = ParseUser.getCurrentUser();
         // switch to the first activity login or main if already login
-        if(currentUser.getObjectId() == null)
+        /* if(currentUser == null)
             startActivity(goLogIn);
         else
-            startActivity(goMain);
+            startActivity(goMain); */
     }
 
     @Override

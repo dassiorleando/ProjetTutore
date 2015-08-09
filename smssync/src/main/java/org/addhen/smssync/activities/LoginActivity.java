@@ -15,7 +15,6 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-import org.addhen.smssync.App;
 import org.addhen.smssync.R;
 
 public class LoginActivity extends ActionBarActivity {
@@ -26,8 +25,6 @@ public class LoginActivity extends ActionBarActivity {
 
     private String logInError = "";
     private Boolean logInBool = false;
-
-    private App APP = (App) getApplicationContext();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,25 +44,21 @@ public class LoginActivity extends ActionBarActivity {
                 checkForm();
 
                 if (!logInBool) {
-
                     String username = pseudo.getText().toString();
                     String password = pwd.getText().toString();
 
                     ParseUser.logInInBackground(username, password, new LogInCallback() {
                         @Override
                         public void done(ParseUser parseUser, ParseException e) {
-
                             if (e == null) {
                                 if (parseUser != null) {
                                     startActivity(goMain);
 
                                     ParseUser p = ParseUser.getCurrentUser();
-                                    APP.setCurrentUser(p);
                                 }
                             }
                         }
                     });
-
                 }
                 else {
                     Toast.makeText(view.getContext(), logInError, Toast.LENGTH_LONG).show();

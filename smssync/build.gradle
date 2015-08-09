@@ -55,8 +55,8 @@ android {
     sourceSets {
 
         defaultConfig {
-            testApplicationId "org.addhen.smssync.tests"
-            applicationId "org.addhen.smssync"
+            testApplicationId "org.addhen.smssyncDassi.tests"
+            applicationId "org.addhen.smssyncDassi"
             buildConfigField "String", "GOOGLE_FORM_URL",
                     project.hasProperty('googleDocsForm') ? googleDocsForm : "\"\""
         }

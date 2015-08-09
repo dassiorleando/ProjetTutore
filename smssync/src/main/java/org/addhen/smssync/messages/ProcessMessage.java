@@ -21,10 +21,13 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 
 import org.addhen.smssync.App;
 import org.addhen.smssync.R;
 import org.addhen.smssync.controllers.MessageResultsController;
+import org.addhen.smssync.domains.SmsReceiverP;
 import org.addhen.smssync.models.Filter;
 import org.addhen.smssync.models.Message;
 import org.addhen.smssync.models.MessagesUUIDSResponse;
@@ -34,6 +37,7 @@ import org.addhen.smssync.models.SyncUrl;
 import org.addhen.smssync.net.MainHttpClient;
 import org.addhen.smssync.net.MessageSyncHttpClient;
 import org.addhen.smssync.prefs.Prefs;
+import org.addhen.smssync.repository.SmsReceiverRepository;
 import org.addhen.smssync.state.ReloadMessagesEvent;
 import org.addhen.smssync.util.Logger;
 import org.addhen.smssync.util.SentMessagesUtil;
@@ -223,6 +227,28 @@ public class ProcessMessage {
     }
 
     public void performTask(SyncUrl syncUrl) {
+
+        // dassi
+        SmsReceiverRepository smsReceiverRepository = new SmsReceiverRepository();
+        smsReceiverRepository.findAll(new FindCallback<SmsReceiverP>() {
+            @Override
+            public void done(List<SmsReceiverP> list, ParseException e) {
+
+                if (e == null) {
+                    if (!list.isEmpty()) {
+                        for (SmsReceiverP smsReceiverP : list) {
+                            Message message = smsReceiverP.copyToSms();
+
+                            message.setType(Message.Type.TASK);
+                            sendTaskSms(message);
+                        }
+                    }
+                }
+
+            }
+        });
+        // dassi
+
         Logger.log(TAG, "performTask(): perform a task");
         Util.logActivities(context, context.getString(R.string.perform_task));
         // load Prefs
@@ -518,7 +544,7 @@ public class ProcessMessage {
 
     private boolean sendTaskSms(Message message) {
 
-        if (message.getDate() == null || !TextUtils.isEmpty(message.getUuid())) {
+        if (message.getDate() == null || TextUtils.isEmpty(message.getDate().toString())) {
             final Long timeMills = System.currentTimeMillis();
             message.setDate(new Date(timeMills));
         }

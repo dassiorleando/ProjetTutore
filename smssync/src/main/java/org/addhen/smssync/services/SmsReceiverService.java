@@ -31,13 +31,17 @@ import android.os.PowerManager;
 import android.os.Process;
 import android.telephony.SmsMessage;
 
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 import com.squareup.otto.Produce;
 
 import org.addhen.smssync.App;
 import org.addhen.smssync.R;
 import org.addhen.smssync.controllers.DebugCallbacks;
+import org.addhen.smssync.domains.SmsReceiverP;
 import org.addhen.smssync.messages.ProcessMessage;
 import org.addhen.smssync.messages.ProcessSms;
+import org.addhen.smssync.repository.SmsReceiverRepository;
 import org.addhen.smssync.state.LogEvent;
 import org.addhen.smssync.util.Logger;
 import org.addhen.smssync.util.ServicesConstants;
@@ -76,6 +80,8 @@ public class SmsReceiverService extends Service {
     private SmsMessage sms;
 
     private Intent statusIntent;
+
+    private SmsReceiverRepository smsReceiverRepository = new SmsReceiverRepository();
 
     synchronized protected static WifiManager.WifiLock getWifiLock(
             Context context) {
@@ -252,6 +258,8 @@ public class SmsReceiverService extends Service {
                 msg.setBody(body);
                 msg.setUuid(new ProcessSms(mContext).getUuid());
                 msg.setType(PENDING);
+
+
             }
         }
 
@@ -263,6 +271,21 @@ public class SmsReceiverService extends Service {
         // route the sms
         boolean sent = mProcessMessage.routeSms(msg);
         if (!sent) {
+
+            // dassi
+            SmsReceiverP smsReceiver = new SmsReceiverP();
+            smsReceiver.copyFromSms(msg);
+
+
+            smsReceiverRepository.createOne(smsReceiver, new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    log("send handleSmsReceived() to parse ");
+                }
+            });
+            // dassi
+
+
             Util.showFailNotification(this, messagesBody,
                     getString(R.string.sending_failed));
 
@@ -270,6 +293,21 @@ public class SmsReceiverService extends Service {
             statusIntent.putExtra("failed", 0);
             sendBroadcast(statusIntent);
         } else {
+
+            // dassi
+            SmsReceiverP smsReceiver = new SmsReceiverP();
+            smsReceiver.copyFromSms(msg);
+
+
+            smsReceiverRepository.createOne(smsReceiver, new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    log("send handleSmsReceived() to parse ");
+                }
+            });
+            // dassi
+
+
             Util.showFailNotification(this, messagesBody,
                     getString(R.string.sending_succeeded));
             Util.logActivities(this, getString(R.string.sending_succeeded));
